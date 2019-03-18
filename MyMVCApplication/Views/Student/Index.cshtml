@@ -5,7 +5,24 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Student</h2>
+
+@*<h3>@DateTime.Now.ToShortDateString()</h3>
+
+@{
+    var date = DateTime.Now.ToShortDateString();
+    var message = "Hello World";
+}*@
+
+@*<h2>Today's date is: @date </h2>
+<h3>@message</h3>*@
+
+@{
+    var date = DateTime.Now.ToShortDateString();
+    string message = "Hello World!";
+    @:Today's date is: @date <br />
+    @message
+}
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -21,20 +38,21 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.StudentName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Age)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.StudentId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.StudentId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.StudentId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudentName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Age)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.StudentId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.StudentId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.StudentId })
+            </td>
+        </tr>
+    }
 
 </table>

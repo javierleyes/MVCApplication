@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace MyMVCApplication.Controllers
@@ -36,11 +35,25 @@ namespace MyMVCApplication.Controllers
         [HttpPost]
         public ActionResult Edit(Student student)
         {
-            Student.RemoveAt(student.StudentId);
+            bool check = true;
 
-            Student.Add(student);
+            // Verifico las property
+            if (ModelState.IsValid)
+            {
+                if (check)
+                {
+                    // Agrego resumen de errores
+                    ModelState.AddModelError(String.Empty, "El dato ya existe en la base de datos");
 
-            return RedirectToAction("Index");
+                    return View(student);
+                }
+
+                Student.Add(student);
+
+                return RedirectToAction("Index");
+            }
+
+            return View(student);
         }
     }
 }
