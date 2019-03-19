@@ -206,7 +206,9 @@ Property:
 @Html.ValidationMessage("StudentName", "Please enter student name.", new { @class = "text-danger" })
 ```
 
-## Add error in ModelState
+## Validation 
+
+* Add error in ModelState
 ```
 if (ModelState.IsValid) { 
               
@@ -219,6 +221,31 @@ if (ModelState.IsValid) {
     
         return View(std);
     }
+}
+```
+
+## Layout View
+
+* The layout view is same as the master page of the ASP.NET webform application.
+
+* _ViewStart.cshtml is included in the Views folder by default. It sets up the default layout page for all the views in the folder and its subfolders using the Layout property. You can assign a valid path of any Layout page to the Layout property.
+
+* _ViewStart.cshtml can also be included in sub folder of View folder to set the default layout page for all the views included in that particular subfolder only.
+
+* Setting Layout property in individual view
+
+```
+@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_myLayoutPage.cshtml";
+}
+```
+
+* Specify Layout Page in ActionResult Method
+```
+public ActionResult Index()
+{
+    return View("Index", "_myLayoutPage");
 }
 ```
 
