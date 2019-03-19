@@ -232,6 +232,8 @@ if (ModelState.IsValid) {
 
 * _ViewStart.cshtml can also be included in sub folder of View folder to set the default layout page for all the views included in that particular subfolder only.
 
+* Create: MVC 5 Layout Page
+
 * Setting Layout property in individual view
 
 ```
@@ -248,4 +250,7 @@ public ActionResult Index()
     return View("Index", "_myLayoutPage");
 }
 ```
+
+## Partial View
+
 

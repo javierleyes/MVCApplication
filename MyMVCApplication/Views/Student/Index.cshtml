@@ -1,58 +1,21 @@
-﻿@model IEnumerable<MyMVCApplication.Models.Student>
-
+﻿
 @{
     ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_MyLayoutPage.cshtml";
 }
 
-<h2>Student</h2>
+<div class="jumbotron">
+    <h2>Index personalizado</h2>
+</div>
 
-@*<h3>@DateTime.Now.ToShortDateString()</h3>
-
-@{
-    var date = DateTime.Now.ToShortDateString();
-    var message = "Hello World";
-}*@
-
-@*<h2>Today's date is: @date </h2>
-<h3>@message</h3>*@
-
-@{
-    var date = DateTime.Now.ToShortDateString();
-    string message = "Hello World!";
-    @:Today's date is: @date <br />
-    @message
-}
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.StudentName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Age)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StudentName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Age)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.StudentId }) |
-                @Html.ActionLink("Details", "Details", new { id = item.StudentId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.StudentId })
-            </td>
-        </tr>
+<div class="row">
+    <div class="col-md-4">
+        <p>This is body, para insertar el contenido.</p>
+    </div>
+    @section footer{
+        <p class="lead">
+            This is footer section. Acá se inserta el footer de las páginas
+        </p>
     }
+</div>
 
-</table>
