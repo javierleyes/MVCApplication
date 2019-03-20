@@ -253,4 +253,31 @@ public ActionResult Index()
 
 ## Partial View
 
+* To create a partial view, right click on Shared folder -> select Add -> click on View.
+
+    Check -> Create as a partial view 
+
+* Render Partial View
+
+    You can render the partial view in the parent view using html helper methods: Partial() or RenderPartial() or RenderAction().
+
+Html.RenderPartial()
+
+Helper method renders the specified partial view. It accept partial view name as a string parameter and returns MvcHtmlString. It returns html string so you have a chance of modifing the html before rendering.
+
+```  
+@{
+    Html.RenderPartial("_HeaderNavBar");   
+}
+
+```  
+
+Html.Partial()
+
+The RenderPartial helper method is same as the Partial method except that it returns void and writes resulted html of a specified partial view into a http response stream directly.
+
+
+```
+@Html.Partial("_HeaderNavBar")
+```    
 
