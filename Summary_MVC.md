@@ -1,14 +1,4 @@
 
-Preguntas MVC
-
-* Relación entre vista y controller.
-
-* Que contiene la carpeta App_Data y Model con una arquitectura en capas ?
-
-* What's the difference between controller and action method ?
-
-* Is there a route defined and other Action Method ?
-
 # Controller
 
 ## Action method
@@ -280,4 +270,29 @@ The RenderPartial helper method is same as the Partial method except that it ret
 ```
 @Html.Partial("_HeaderNavBar")
 ```    
+
+## ViewBag
+
+Example:
+
+```  
+public ActionResult Index()
+{
+    ViewBag.TotalStudents = studentList.Count();
+
+    return View();
+}
+```  
+
+Internally, ViewBag is a wrapper around ViewData. It will throw a runtime exception, if the ViewBag property name matches with the key of ViewData.
+
+ViewBag transfers data from the controller to the view, ideally temporary data which in not included in a model.
+
+You can assign any number of propertes and values to ViewBag
+
+The ViewBag's life only lasts during the current http request. 
+
+ViewBag values will be null if redirection occurs.
+
+ViewBag is actually a wrapper around ViewData.
 
