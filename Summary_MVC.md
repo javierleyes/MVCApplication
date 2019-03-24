@@ -282,6 +282,10 @@ public ActionResult Index()
 
     return View();
 }
+
+//Example: Acess ViewBag in a View
+
+<label>Total Students:</label>  @ViewBag.TotalStudents
 ```  
 
 Internally, ViewBag is a wrapper around ViewData. It will throw a runtime exception, if the ViewBag property name matches with the key of ViewData.
@@ -296,3 +300,39 @@ ViewBag values will be null if redirection occurs.
 
 ViewBag is actually a wrapper around ViewData.
 
+## ViewData
+
+ViewData is similar to ViewBag.
+
+ViewData is a dictionary which can contain key-value pairs where each key must be string.
+
+Example: 
+```
+public ActionResult Index()
+{
+    IList<Student> studentList = new List<Student>();
+    studentList.Add(new Student(){ StudentName = "Bill" });
+    studentList.Add(new Student(){ StudentName = "Steve" });
+    studentList.Add(new Student(){ StudentName = "Ram" });
+
+    ViewData["students"] = studentList;
+  
+    return View();
+}
+
+//Example: Access ViewData in a Razor View
+
+<ul>
+@foreach (var std in ViewData["students"] as IList<Student>)
+{
+    <li>
+        @std.StudentName
+    </li>
+}
+</ul>
+
+```
+
+## Important !
+
+ViewData and ViewBag both use the same dictionary internally. So you cannot have ViewData Key matches with the property name of ViewBag, otherwise it will throw a runtime exception.
