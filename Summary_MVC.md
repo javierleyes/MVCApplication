@@ -336,3 +336,75 @@ public ActionResult Index()
 ## Important !
 
 ViewData and ViewBag both use the same dictionary internally. So you cannot have ViewData Key matches with the property name of ViewBag, otherwise it will throw a runtime exception.
+
+## TempData
+
+It is useful when you want to transfer non-sensitive data from one action method to another action method of the same or a different controller as well as redirects. 
+
+Example
+
+```
+public ActionResult Index()
+{
+    TempData["name"] = "Test data";
+    TempData["age"] = 30;
+
+    return View();
+}
+
+public ActionResult About()
+{
+    string userName;
+    int userAge;
+        
+    if(TempData.ContainsKey("name"))
+        userName = TempData["name"].ToString();
+    
+    if(TempData.ContainsKey("age"))
+        userAge = int.Parse(TempData["age"].ToString());
+    
+    return View();
+}
+```
+
+Call TempData.Keep() to retain TempData values in a third consecutive request.
+
+```
+public ActionResult Index()
+{
+    TempData["myData"] = "Test data";
+    return View();
+}
+
+public ActionResult About()
+{
+    string data;
+        
+    if(TempData["myData"] != null)
+        data = TempData["myData"] as string;
+        
+    TempData.Keep();
+        
+    return View();
+}
+
+public ActionResult Contact()
+{
+    string data;
+        
+    if(TempData["myData"] != null)
+        data = TempData["myData"] as string;
+            
+    return View();
+}
+```
+
+TempData can be used to store data between two consecutive requests. 
+
+TempData values will be retained during redirection.
+
+TempData value must be type cast before use. Check for null values to avoid runtime error.
+
+TempData can be used to store only one time messages like error messages, validation messages.
+
+Call TempData.Keep() to keep all the values of TempData in a third request.
