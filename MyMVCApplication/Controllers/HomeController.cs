@@ -6,10 +6,13 @@ using System.Web.Mvc;
 
 namespace MyMVCApplication.Controllers
 {
+    [HandleError]
     public class HomeController : Controller
     {
         public ActionResult Index()
         {
+            throw new Exception("Algo salio mal");
+
             return View();
         }
 

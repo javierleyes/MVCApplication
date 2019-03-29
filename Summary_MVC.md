@@ -408,3 +408,127 @@ TempData value must be type cast before use. Check for null values to avoid runt
 TempData can be used to store only one time messages like error messages, validation messages.
 
 Call TempData.Keep() to keep all the values of TempData in a third request.
+
+## Filters
+
+Filter is a custom class where you can write custom logic to execute before or after an action method executes. Filters can be applied to an action method or controller in a declarative or programmatic way. Declarative means by applying a filter attribute to an action method or controller class and programmatic means by implementing a corresponding interface.
+
+Types:
+
+* Exception filters ([HandleError])
+* Result filters ([OutputCache])
+* Action filters
+* Authorization filters ([Authorize], [RequireHttps])
+
+Please make sure that CustomError mode is on in System.web section of web.config, in order for HandleErrorAttribute work properly.
+
+
+Example: SetCustomError in web.config
+```
+<customErrors mode="On" /> 
+```
+Filters can be applied at three levels.
+
+1. Global Level
+
+You can apply filters at global level in the Application_Start event of Global.asax.cs file by using default FilterConfig.RegisterGlobalFilters() mehtod. Global filters will be applied to all the controller and action methods of an application.
+
+```
+// MvcApplication class contains in Global.asax.cs file 
+public class MvcApplication : System.Web.HttpApplication
+{
+    protected void Application_Start()
+    {
+        FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+    }
+}
+
+// FilterConfig.cs located in App_Start folder 
+public class FilterConfig
+{
+    public static void RegisterGlobalFilters(GlobalFilterCollection filters)
+    {
+        filters.Add(new HandleErrorAttribute());
+    }
+}
+```
+
+2. Controller level
+
+```
+[HandleError]
+public class HomeController : Controller
+{
+    public ActionResult Index()
+    {
+        return View();
+    }
+
+}
+```
+
+3. Action method level
+
+```
+public class HomeController : Controller
+{
+    [HandleError]
+    public ActionResult Index()
+    {
+        return View();
+    }
+
+}
+```
+
+The same way, you can apply multiple built-in or custom filters globally or at controller or action method level for different purpose such as [Authorize],[RequireHttps], [ChildActionOnly],[OutputCache],[HandleError].
+
+So, filters run in the following order.
+
+1. Authorization filters
+
+2. Action filters
+
+3. Response filters
+
+4. Exception filters
+
+Create Custom Filter
+
+```
+class MyErrorHandler : FilterAttribute, IExceptionFilter
+{
+    public override void IExceptionFilter.OnException(ExceptionContext filterContext)
+    {
+        Log(filterContext.Exception);
+
+        base.OnException(filterContext);
+    }
+
+    private void Log(Exception exception)
+    {
+        //log exception here..
+ 
+    }
+}
+```
+
+```
+Custom HandleErrorAttribute 
+class MyErrorHandler : HandleErrorAttribute
+{
+    public override void OnException(ExceptionContext filterContext)
+    {
+        Log(filterContext.Exception);
+
+        base.OnException(filterContext);
+    }
+
+    private void Log(Exception exception)
+    {
+        //log exception here..
+ 
+    }
+}   
+```
+
