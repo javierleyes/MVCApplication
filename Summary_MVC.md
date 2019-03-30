@@ -723,3 +723,10 @@ public class adminAreaRegistration : AreaRegistration
 # Resources
 
 https://www.tutorialsteacher.com/mvc/asp.net-mvc-tutorials
+
+https://www.tutorialspoint.com/asp.net_mvc/
+
+https://docs.microsoft.com/en-us/aspnet/mvc/overview/getting-started/recommended-resources-for-mvc
+
+
+
