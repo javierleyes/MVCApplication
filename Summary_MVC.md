@@ -532,3 +532,194 @@ class MyErrorHandler : HandleErrorAttribute
 }   
 ```
 
+# Bundling and minification
+
+Bundling allow us to load the bunch of static files from the server into one http request.
+Bundling technique in MVC 4 allows us to load more than one JavaScript file.
+
+Minification technique optimizes script or css file size by removing unnecessary white space and comments and shortening variable names to one character.
+
+Bundle Types
+
+MVC 5 includes following bundle classes in System.web.Optimization namespace:
+
+ScriptBundle: ScriptBundle is responsible for JavaScript minification of single or multiple script files and bundling.
+
+StyleBundle: StyleBundle is responsible for CSS minification of single or multiple style sheet files.
+
+DynamicFolderBundle: Represents a Bundle object that ASP.NET creates from a folder that contains files of the same type.
+
+## ScriptBundle 
+
+Example: BundleConfig.RegisterBundle()
+
+```
+using System.Web;
+using System.Web.Optimization;
+
+public class BundleConfig
+{
+    public static void RegisterBundles(BundleCollection bundles)
+    {   
+        // create an object of ScriptBundle and 
+        // specify bundle name (as virtual path) as constructor parameter 
+        ScriptBundle scriptBndl = new ScriptBundle("~/bundles/bootstrap");
+
+        
+        //use Include() method to add all the script files with their paths 
+        scriptBndl.Include(
+                            "~/Scripts/bootstrap.js",
+                            "~/Scripts/respond.js"
+                          );
+
+        
+        //Add the bundle into BundleCollection
+        bundles.Add(scriptBndl);
+
+        BundleTable.EnableOptimizations = true;
+    }
+}
+```
+
+1. First of all create an instance of ScriptBundle class by specifing the bundle name as a constructor parameter. This bundle name is a virtual path starting with ~/. You can give anything in virtual path but it's recommended to give a path that will be easy to identify as a bundle. Here, we have given "~/bundles/bootstrap" path, so that we can easily identify that this bundle includes bootstrap related files.
+
+2. Use Include method to add one or more JS files into a bundle with its relative path after root path using ~ sign.
+
+3. Final, add the bundle into BundleCollection instance, which is specified as a parameter in RegisterBundle() method.
+
+4. Last, BundleTable.EnableOptimizations = true enables bundling and minification in debug mode. If you set it to false then it will not do bundling and minification.
+
+
+You can also use IncludeDirectory method of bundle class to add all the files under particular directory as shown below.
+
+```
+public static void RegisterBundles(BundleCollection bundles)
+{            
+    bundles.Add(new ScriptBundle("~/bundles/scripts").IncludeDirectory("~/Scripts/","*.js",true));
+}
+```
+
+* Using Wildcards
+
+Sometime third party script files includes versions in a name of script file. So it is not advisable to changes the code whenever you upgrade the version of script file. With the use of wildcards, you don't have to specify a version of a script file. It automatically includes files with the version available.
+
+Example: Wildcard with bundle
+```
+public class BundleConfig
+{
+    public static void RegisterBundles(BundleCollection bundles)
+    {            
+        bundles.Add(new ScriptBundle("~/bundles/jquery")
+               .Include( "~/Scripts/jquery-{version}.js"));
+    }
+}
+```
+
+* Using CDN
+
+You can also use Content Delivery Network to load script files. For example, you can load jquery library from CDN as shown below.
+
+Example: Load files from CDN
+```
+public class BundleConfig
+{
+    public static void RegisterBundles(BundleCollection bundles)
+    {            
+        var cdnPath = "http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js";
+
+        bundles.Add(new ScriptBundle("~/bundles/jquery", cdnPath)
+               .Include( "~/Scripts/jquery-{version}.js"));
+    }
+}
+```
+
+* Include ScriptBundle in Razor View 
+
+@Scripts.Render("~/bundles/bootstrap")
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Scripts.Render("~/bundles/bootstrap")
+</head>
+<body>
+    @*html code removed for clarity *@
+</body>
+</html>
+```
+
+```
+Please make sure that you have set debug = false in web.config <compilation debug="false" targetFramework="4.5"/>
+```
+
+## StyleBundle
+
+Example: StyleBundle
+```
+public class BundleConfig
+{
+    public static void RegisterBundles(BundleCollection bundles)
+    {            
+        bundles.Add(new StyleBundle("~/bundles/css").Include(
+                                                    "~/Content/bootstrap.css",
+                                                    "~/Content/site.css"
+                                                ));
+        // add ScriptBundle here..  
+        
+    }
+}
+```
+
+* Include Style Bundle in Razor View
+
+@Styles.Render("~/bundles/css")
+
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/bundles/css")
+</head>
+<body>
+    @*html code removed for clarity *@
+</body>
+</html>
+```
+
+# Area
+
+Area allows us to partition large application into smaller units where each unit contains separate MVC folder structure, same as default MVC folder structure. For example, large enterprise application may have different modules like admin, finance, HR, marketing etc. 
+
+```
+public class adminAreaRegistration : AreaRegistration 
+{
+    public override string AreaName 
+    {
+        get 
+        {
+            return "admin";
+        }
+    }
+
+    public override void RegisterArea(AreaRegistrationContext context) 
+    {
+        context.MapRoute(
+            "admin_default",
+            "admin/{controller}/{action}/{id}",
+            new { action = "Index", id = UrlParameter.Optional }
+        );
+    }
+}
+```
+
+# Resources
+
+https://www.tutorialsteacher.com/mvc/asp.net-mvc-tutorials
