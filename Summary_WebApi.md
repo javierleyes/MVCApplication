@@ -29,7 +29,7 @@ The Web API action method can have following return types.
 3. HttpResponseMessage
 4. IHttpActionResult
 
-
+* HttpResponseMessage
 
 The advantage of sending HttpResponseMessage from an action method is that you can configure a response your way. You can set the status code, content or error message (if any) as per your requirement.
 
@@ -47,6 +47,10 @@ public HttpResponseMessage Get(int id)
     return Request.CreateResponse(HttpStatusCode.OK, stud);
 }  
 ```
+
+* IHttpActionResult
+
+The IHttpActionResult was introduced in Web API 2 (.NET 4.5). An action method in Web API 2 can return an implementation of IHttpActionResult class which is more or less similar to ActionResult class in ASP.NET MVC.
 
 Example: Return IHttpActionResult Type using Ok() and NotFound() Methods
 
@@ -103,4 +107,34 @@ public IHttpActionResult GetName(int id)
     return new TextResult(name, Request);
 }
 ```
+
+# Media Type Formatters
+
+Configure JSON Serialization
+
+JSON formatter can be configured in WebApiConfig class. The JsonMediaTypeFormatter class includes various properties and methods using which you can customize JSON serialization. For example, Web API writes JSON property names with PascalCase by default. To write JSON property names with camelCase, set the CamelCasePropertyNamesContractResolver on the serializer settings as shown below.
+
+Example: Customize JSON Serialization in C#
+
+```
+public static class WebApiConfig
+{
+    public static void Register(HttpConfiguration config)
+    {
+        config.MapHttpAttributeRoutes();
+            
+        config.Routes.MapHttpRoute(
+            name: "DefaultApi",
+            routeTemplate: "api/{controller}/{id}",
+            defaults: new { id = RouteParameter.Optional }
+        );
+
+        // configure json formatter
+        JsonMediaTypeFormatter jsonFormatter = config.Formatters.JsonFormatter;
+
+        jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+    }
+}
+```
+
 
