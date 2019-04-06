@@ -1,6 +1,36 @@
 
 # Web APi
 
+# Attribute Routing
+
+The Route attribute can be applied on any controller or action method.
+
+Example: Attribute Routing
+```
+public class StudentController : ApiController
+{
+    [Route("api/student/names")]
+    public IEnumerable<string> Get()
+    {
+        return new string[] { "student1", "student2" };
+    }
+}
+```
+
+# [FromUri] and [FromBody]
+You have seen that by default Web API gets the value of a primitive parameter from the query string and complex type parameter from the request body.
+
+# Action Method Return Type
+
+The Web API action method can have following return types.
+
+1. Void
+2. Primitive type or Complex type
+3. HttpResponseMessage
+4. IHttpActionResult
+
+
+
 The advantage of sending HttpResponseMessage from an action method is that you can configure a response your way. You can set the status code, content or error message (if any) as per your requirement.
 
 Example: Return HttpResponseMessage
