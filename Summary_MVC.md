@@ -720,6 +720,8 @@ public class adminAreaRegistration : AreaRegistration
 }
 ```
 
+Usar readonly en vez de disabled
+
 # Resources
 
 https://www.tutorialsteacher.com/mvc/asp.net-mvc-tutorials

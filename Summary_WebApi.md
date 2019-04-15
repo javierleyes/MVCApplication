@@ -137,4 +137,35 @@ public static class WebApiConfig
 }
 ```
 
+# Web API Filters
 
+Web API includes filters to add extra logic before or after action method executes. Filters can be used to provide cross-cutting features such as logging, exception handling, performance measurement, authentication and authorization.
+
+1. Override Filter
+2. Exception Filter
+3. Authorization Filter
+4. Authentication Filter
+5. Action Filter
+6. Simple Filter
+
+Let's create simple LogAttribute class for logging purpose to demonstrate action filter.
+
+```
+public class LogAttribute : ActionFilterAttribute 
+{
+    public LogAttribute()
+    {
+
+    }
+
+    public override void OnActionExecuting(HttpActionContext actionContext)
+    {
+        Trace.WriteLine(string.Format("Action Method {0} executing at {1}", actionContext.ActionDescriptor.ActionName, DateTime.Now.ToShortDateString()), "Web API Logs");
+    }
+
+    public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
+    {
+        Trace.WriteLine(string.Format("Action Method {0} executed at {1}", actionExecutedContext.ActionContext.ActionDescriptor.ActionName, DateTime.Now.ToShortDateString()), "Web API Logs");
+    }
+}
+```
