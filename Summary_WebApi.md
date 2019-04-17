@@ -174,6 +174,10 @@ public class LogAttribute : ActionFilterAttribute
 
 Web API can be accessed in the server side code in .NET and also on client side using JavaScript frameworks such as jQuery, AnguarJS, KnockoutJS etc.
 
+## Consume Web API in AngularJS
+
+Web API can be accessed directly from the UI at client side using AJAX capabilities of any JavaScript framework such as AngularJS, KnockoutJS, Ext JS etc.
+
 ## Consume Web API in ASP.NET MVC
 
 To consume Web API in ASP.NET MVC server side we can use HttpClient in the MVC controller. HttpClient sends a request to the Web API and receives a response. We then need to convert response data that came from Web API to a model and then render it into a view.
@@ -390,7 +394,53 @@ public ActionResult Delete(int id)
 }
 ```
 
-## Consume Web API in AngularJS
+## The following table lists all the methods of HttpClient to send different HTTP requests.
 
-Web API can be accessed directly from the UI at client side using AJAX capabilities of any JavaScript framework such as AngularJS, KnockoutJS, Ext JS etc.
+* GetAsync	
+
+Sends a GET request to the specified Uri as an asynchronous operation.
+
+* GetByteArrayAsync	
+
+Sends a GET request to the specified Uri and returns the response body as a byte array in an asynchronous operation.
+
+* GetStreamAsync	
+
+Sends a GET request to the specified Uri and returns the response body as a stream in an asynchronous operation.
+
+* GetStringAsync	
+
+Sends a GET request to the specified Uri and returns the response body as a string in an asynchronous operation.
+
+* PostAsync	
+
+Sends a POST request to the specified Uri as an asynchronous operation.
+
+* PostAsJsonAsync	
+
+Sends a POST request as an asynchronous operation to the specified Uri with the given value serialized as JSON.
+
+* PostAsXmlAsync	
+
+Sends a POST request as an asynchronous operation to the specified Uri with the given value serialized as XML.
+
+* PutAsync	
+
+Sends a PUT request to the specified Uri as an asynchronous operation.
+
+* PutAsJsonAsync	
+
+Sends a PUT request as an asynchronous operation to the specified Uri with the given value serialized as JSON.
+
+* PutAsXmlAsync	
+
+Sends a PUT request as an asynchronous operation to the specified Uri with the given value serialized as XML.
+
+* DeleteAsync	
+
+Sends a DELETE request to the specified Uri as an asynchronous operation.
+
+
+
+
 
