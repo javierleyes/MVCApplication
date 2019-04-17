@@ -440,6 +440,104 @@ Sends a PUT request as an asynchronous operation to the specified Uri with the g
 
 Sends a DELETE request to the specified Uri as an asynchronous operation.
 
+# Hosting
+
+The Web API application can be hosted in two ways.
+
+* IIS Hosting
+
+* Self Hosting
+
+1. Create a console project in Visual Studio
+
+2. Add Microsoft ASP.NET Web API 2.x Self Host package using NuGet
+
+3. Now write the following code in the Main() method of Program class.
+
+Example: Self-Hosting Web API
+```
+class Program
+{
+    static void Main(string[] args)
+    {
+        var config = new HttpSelfHostConfiguration("http://localhost:1234");
+
+        var server = new HttpSelfHostServer(config, new MyWebAPIMessageHandler());
+        var task = server.OpenAsync();
+        task.Wait();
+
+        Console.WriteLine("Web API Server has started at http://localhost:1234");
+        Console.ReadLine();
+    }
+}
+```
+
+4. Create MyWebAPIMessageHandler class and write the following code.
+
+Example: MessageHandler
+```
+class MyWebAPIMessageHandler : HttpMessageHandler
+{
+    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
+    {
+        var task = new Task<HttpResponseMessage>(() => {
+            var resMsg = new HttpResponseMessage();
+            resMsg.Content = new StringContent("Hello World!");
+            return resMsg;
+        });
+
+        task.Start();
+        return task;
+    }
+}
+```
+
+### Hosting Controller Infrastructure
+
+5. In the same self hosting console application, create simple HomeController class as shown below.
+
+Example: Web API Controller
+```
+public class HomeController : ApiController
+{
+    public string Get() {
+        return "Hello World!";
+    }
+
+    public string Get(string name) {
+        return "Hello " + name;
+    }
+}
+```
+
+6. Now, in the Main() method, configure a default route using config object as shown below.
+
+Example: Self Hosting Web API
+```
+static void Main(string[] args)
+{
+    var config = new HttpSelfHostConfiguration("http://localhost:1234");
+    config.Routes.MapHttpRoute("default",
+                                "api/{controller}/{id}",
+                                new { controller = "Home", id = RouteParameter.Optional });
+
+    var server = new HttpSelfHostServer(config);            
+    var task = server.OpenAsync();
+    task.Wait();
+
+    Console.WriteLine("Web API Server has started at http://localhost:1234");
+    Console.ReadLine();
+}
+```
+
+7. Now, run the console application by pressing Ctrl + F5. Open the browser and enter http://localhost:1234/api
+
+
+
+# References
+
+https://www.tutorialsteacher.com/webapi
+
 
 
 
