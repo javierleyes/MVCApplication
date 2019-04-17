@@ -169,3 +169,228 @@ public class LogAttribute : ActionFilterAttribute
     }
 }
 ```
+
+# Consume Web API
+
+Web API can be accessed in the server side code in .NET and also on client side using JavaScript frameworks such as jQuery, AnguarJS, KnockoutJS etc.
+
+## Consume Web API in ASP.NET MVC
+
+To consume Web API in ASP.NET MVC server side we can use HttpClient in the MVC controller. HttpClient sends a request to the Web API and receives a response. We then need to convert response data that came from Web API to a model and then render it into a view.
+
+* Consume Web API Get method
+
+```
+// API
+public IHttpActionResult GetAllStudents(bool includeAddress = false)
+{
+	IList<StudentViewModel> students = null;
+
+	...
+	...
+	...
+
+	if (students.Count == 0)
+	{
+		return NotFound();
+	}
+
+	return Ok(students);
+}
+```
+```
+[HttpGet]
+public ActionResult Index()
+{
+    IEnumerable<StudentViewModel> students = null;
+
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("http://localhost:64189/api/");
+        //HTTP GET
+        var responseTask = client.GetAsync("student");
+        responseTask.Wait();
+
+        var result = responseTask.Result;
+        if (result.IsSuccessStatusCode)
+        {
+            var readTask = result.Content.ReadAsAsync<IList<StudentViewModel>>();
+            readTask.Wait();
+
+            students = readTask.Result;
+        }
+        else //web api sent error response 
+        {
+            //log response status here..
+
+            students = Enumerable.Empty<StudentViewModel>();
+
+            ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
+        }
+    }
+    return View(students);
+}
+```
+
+* Consume Web API Post method
+
+```
+// API
+public IHttpActionResult PostNewStudent(StudentViewModel student)
+{
+	if (!ModelState.IsValid)
+		return BadRequest("Not a valid model");
+
+	...
+	
+	return Ok();
+}
+```
+```
+[HttpPost]
+public ActionResult create(StudentViewModel student)
+{
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("http://localhost:64189/api/student");
+
+        //HTTP POST
+        var postTask = client.PostAsJsonAsync<StudentViewModel>("student", student);
+        postTask.Wait();
+
+        var result = postTask.Result;
+        if (result.IsSuccessStatusCode)
+        {
+            return RedirectToAction("Index");
+        }
+    }
+
+    ModelState.AddModelError(string.Empty, "Server Error. Please contact administrator.");
+
+    return View(student);
+}
+```
+
+* Consume Web API Put method
+
+```
+//API
+public IHttpActionResult Put(StudentViewModel student)
+{
+	if (!ModelState.IsValid)
+		return BadRequest("Not a valid data");
+
+	using (var ctx = new SchoolDBEntities())
+	{
+		....
+
+		if (existingStudent != null)
+		{
+			...
+		}
+		else
+		{
+			return NotFound();
+		}
+	}
+	
+	return Ok();
+}
+```
+```
+[HttpGet]
+public ActionResult Edit(int id)
+{
+	StudentViewModel student = null;
+
+	using (var client = new HttpClient())
+	{
+		client.BaseAddress = new Uri("http://localhost:64189/api/");
+		//HTTP GET
+		var responseTask = client.GetAsync("student?id=" + id.ToString());
+		responseTask.Wait();
+
+		var result = responseTask.Result;
+		if (result.IsSuccessStatusCode)
+		{
+			var readTask = result.Content.ReadAsAsync<StudentViewModel>();
+			readTask.Wait();
+
+			student = readTask.Result;
+		}
+	}
+
+	return View(student);
+}
+
+[HttpPost]
+public ActionResult Edit(StudentViewModel student)
+{
+	using (var client = new HttpClient())
+	{
+		client.BaseAddress = new Uri("http://localhost:64189/api/student");
+
+		//HTTP POST
+		var putTask = client.PutAsJsonAsync<StudentViewModel>("student", student);
+		putTask.Wait();
+
+		var result = putTask.Result;
+		if (result.IsSuccessStatusCode)
+		{
+
+			return RedirectToAction("Index");
+		}
+	}
+
+	return View(student);
+}
+```
+
+* Consume Web API Delete method
+
+```
+//API
+public IHttpActionResult Delete(int id)
+{
+    if (id <= 0)
+        return BadRequest("Not a valid student id");
+
+    using (var ctx = new SchoolDBEntities())
+    {
+        var student = ctx.Students
+            .Where(s => s.StudentID == id)
+            .FirstOrDefault();
+
+        ctx.Entry(student).State = System.Data.Entity.EntityState.Deleted;
+        ctx.SaveChanges();
+    }
+
+    return Ok();
+}
+```
+```
+public ActionResult Delete(int id)
+{
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("http://localhost:64189/api/");
+
+        //HTTP DELETE
+        var deleteTask = client.DeleteAsync("student/" + id.ToString());
+        deleteTask.Wait();
+
+        var result = deleteTask.Result;
+        if (result.IsSuccessStatusCode)
+        {
+            return RedirectToAction("Index");
+        }
+    }
+
+    return RedirectToAction("Index");
+}
+```
+
+## Consume Web API in AngularJS
+
+Web API can be accessed directly from the UI at client side using AJAX capabilities of any JavaScript framework such as AngularJS, KnockoutJS, Ext JS etc.
+
